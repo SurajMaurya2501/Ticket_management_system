@@ -10,12 +10,7 @@ class service_pending extends StatefulWidget {
 }
 
 class _service_pendingState extends State<service_pending> {
-  final List<String> tickets = [
-    '#Ticket 1',
-    '#Ticket 2',
-    '#Ticket 3',
-    '#Ticket 4',
-  ];
+
 
   List<dynamic> ticketList = [];
   @override
@@ -52,7 +47,6 @@ class _service_pendingState extends State<service_pending> {
                 },
                 child: const Text('Open')),
             onTap: () {
-              print('Tapped on Ticekt: ${tickets[index]}');
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(

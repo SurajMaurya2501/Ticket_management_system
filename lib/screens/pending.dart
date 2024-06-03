@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:complaint_management/Service%20Provider/pendingstatus_service.dart';
+import 'package:complaint_management/screens/notification.dart';
+import 'package:complaint_management/screens/ticket_screen.dart';
 import 'package:flutter/material.dart';
 
 class pending extends StatefulWidget {
@@ -10,17 +12,9 @@ class pending extends StatefulWidget {
 }
 
 class _pendingState extends State<pending> {
-  final List<String> tickets = [
-    '#Ticket 1',
-    '#Ticket 2',
-    '#Ticket 3',
-    '#Ticket 4',
-  ];
-
   List<dynamic> ticketList = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getPendingTicket();
   }
@@ -29,7 +23,7 @@ class _pendingState extends State<pending> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('pending Tickets'),
+          title: const Text('pending Tickets'),
         ),
         body: ListView.builder(
             itemCount: ticketList.length, //* 2 - 1,
@@ -46,19 +40,17 @@ class _pendingState extends State<pending> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => pendingstatus_service(
+                              builder: (context) => TicketScreen(
                                     Number: ticketList[index],
+                                    showResolvedTickets: false,
                                   )));
                     },
                     child: const Text('Open')),
                 onTap: () {
-                  print('Tapped on Ticekt: ${tickets[index]}');
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => pendingstatus_service(
-                                Number: ticketList[index],
-                              )));
+                          builder: (context) => const NotificationScreen()));
                 },
               );
             }));

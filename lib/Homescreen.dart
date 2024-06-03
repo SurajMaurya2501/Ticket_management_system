@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:complaint_management/Login/login.dart';
 import 'package:complaint_management/report/report1.dart';
+import 'package:complaint_management/screens/notification.dart';
 import 'package:complaint_management/screens/pending.dart';
 import 'package:complaint_management/screens/profile.dart';
 import 'package:complaint_management/screens/raise.dart';
-import 'package:complaint_management/screens/report.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   bool isLoading = true;
+  int notificationNum = 0;
 
   List<String> buttons = [
     'Raise Ticket',
@@ -38,6 +39,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     getPendingTicket().whenComplete(() async {
+      await getNotification();
       await getResolvedTicket();
       isLoading = false;
       setState(() {});
@@ -56,17 +58,42 @@ class HomeScreenState extends State<HomeScreen> {
           'T.🅼.S',
           style: TextStyle(color: Colors.deepPurple, fontSize: 30),
         ),
-        leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.notifications_active,
-              color: Colors.deepPurple,
-            )),
+        leading: Stack(
+          children: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                size: 30,
+                Icons.notifications_active,
+                color: Colors.deepPurple,
+              ),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: CircleAvatar(
+                radius: 10,
+                backgroundColor: Colors.red,
+                child: Text(
+                  notificationNum.toString(),
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
+            )
+          ],
+        ),
         actions: [
           IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
+                    MaterialPageRoute(builder: (context) => const LoginPage()));
               },
               icon: const Icon(
                 Icons.power_settings_new,
@@ -278,6 +305,16 @@ class HomeScreenState extends State<HomeScreen> {
               ),
             ),
     );
+  }
+
+  Future getNotification() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("resolvedTicket")
+        .where('isSeen', isEqualTo: false)
+        .get();
+
+    notificationNum = querySnapshot.docs.length;
+    print("notification - $notificationNum");
   }
 
   Future getPendingTicket() async {

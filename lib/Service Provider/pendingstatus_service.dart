@@ -23,7 +23,13 @@ class _pendingstatus_serviceState extends State<pendingstatus_service> {
   @override
   void initState() {
     super.initState();
-    getTicketData();
+    getTicketData().whenComplete(
+      () {
+        setState(() {
+          loading = false;
+        });
+      },
+    );
   }
 
   @override
