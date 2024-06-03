@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "658299404100",
+    "project_id": "complaintmanagementsyste-151cf",
+    "storage_bucket": "complaintmanagementsyste-151cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658299404100:android:e1ae2cb2cc31dc4c4de111",
+        "android_client_info": {
+          "package_name": "com.example.complaint_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgdjfPcKa7KwEEjIk8oEei9fNhGVZsHRQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
