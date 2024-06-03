@@ -1,159 +1,83 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class Pendingstatus extends StatefulWidget {
-  const Pendingstatus({super.key});
+class pendingstatus extends StatefulWidget {
+  String Number;
+  pendingstatus({super.key, required this.Number});
 
   @override
-  State<Pendingstatus> createState() => _PendingstatusState();
+  State<pendingstatus> createState() => _pendingstatusState();
 }
 
-class _PendingstatusState extends State<Pendingstatus> {
+class _pendingstatusState extends State<pendingstatus> {
   final List<String> serviceProviders = [
     'Provider A',
     'Provider B',
     'Provider C',
     'Provider D',
   ];
+  String asset = '';
+  String building = '';
+  String floor = '';
+  String remark = '';
+  String room = '';
+  String work = '';
+  String serviceprovider = '';
 
   String? _selectedServiceProvider;
+  bool loading = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getTicketData();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Ticket ${widget.Number}'),
         centerTitle: true,
-        title: Text(
-          'Pending status of Ticket',
-          style: TextStyle(fontSize: 20),
-        ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Ticket #: 12345',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    _getCurrentDate(),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const TextField(
-                    decoration: InputDecoration(hintText: 'Work'),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const TextField(
-                    decoration: InputDecoration(hintText: 'Building'),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const TextField(
-                    decoration: InputDecoration(hintText: 'Floor'),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const TextField(
-                    decoration: InputDecoration(hintText: 'Room'),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const TextField(
-                    decoration: InputDecoration(hintText: 'Asset'),
-                  ),
-                  // const TextField(
-                  //   decoration: InputDecoration(hintText: 'Service Provider'),
-                  // ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(5.0)),
-                    child: DropdownButtonFormField(
-                      value: _selectedServiceProvider,
-                      items: serviceProviders.map((String provider) {
-                        return DropdownMenuItem(
-                          value: provider,
-                          child: Text(provider),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedServiceProvider = value.toString();
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Service Provider',
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(
-                    height: 35,
-                  ),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Remark:-',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                    child: TextField(
-                      maxLines: null,
-                      decoration: InputDecoration(
-                        hintText: 'Remarks',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Pick Image'),
-                ),
+                customCard('asset', asset, Icons.account_balance),
+                customCard('building', building, Icons.business),
+                customCard('floor', floor, Icons.layers),
+                customCard('remark', remark, Icons.comment),
+                customCard('room', room, Icons.room),
+                customCard('work', work, Icons.work),
+                customCard('serviceprovider', serviceprovider, Icons.build),
               ],
             ),
-          ],
+    );
+  }
+
+  Widget customCard(String title, String message, IconData icon) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.blue),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+        subtitle: Text(
+          message,
+          style: TextStyle(fontSize: 14),
         ),
       ),
     );
@@ -166,5 +90,26 @@ class _PendingstatusState extends State<Pendingstatus> {
 
   String _addLeadingZero(int number) {
     return number.toString().padLeft(2, '0');
+  }
+
+  Future<void> getTicketData() async {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('raisedTickets')
+        .doc(widget.Number)
+        .get();
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> mapData =
+          documentSnapshot.data() as Map<String, dynamic>;
+      asset = mapData['asset'];
+      building = mapData['building'];
+      floor = mapData['floor'];
+      remark = mapData['remark'];
+      room = mapData['room'];
+      work = mapData['work'];
+      serviceprovider = mapData['serviceprovider'] ?? "";
+      setState(() {
+        loading = false;
+      });
+    }
   }
 }

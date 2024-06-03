@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:complaint_management/Login/login.dart';
+import 'package:complaint_management/report/report1.dart';
 import 'package:complaint_management/screens/pending.dart';
 import 'package:complaint_management/screens/profile.dart';
 import 'package:complaint_management/screens/raise.dart';
@@ -26,8 +28,8 @@ class HomeScreenState extends State<HomeScreen> {
   List<Widget> screens = [
     const Raise(),
     pending(),
-    const Report(),
-    password(),
+    const report1(),
+    ChangePasswordScreen(),
   ];
 
   int resolvedTicketLen = 0;
@@ -51,7 +53,7 @@ class HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: Colors.white,
         title: const Text(
-          'C.🅼.S',
+          'T.🅼.S',
           style: TextStyle(color: Colors.deepPurple, fontSize: 30),
         ),
         leading: IconButton(
@@ -62,7 +64,10 @@ class HomeScreenState extends State<HomeScreen> {
             )),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
               icon: const Icon(
                 Icons.power_settings_new,
                 color: Colors.deepPurple,

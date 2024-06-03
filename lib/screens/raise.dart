@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:complaint_management/screens/image.dart';
 import 'package:flutter/material.dart';
@@ -44,16 +43,19 @@ class _RaiseState extends State<Raise> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Center(child: Text('Raise Ticket')),
+        backgroundColor: Colors.deepPurple,
       ),
       body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(20.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
-                'Ticket #: 12345', // Display your ticket number here
+                'Ticket #: 12345',
                 style: TextStyle(
                   color: Colors.blue,
                   fontSize: 16,
@@ -62,70 +64,43 @@ class _RaiseState extends State<Raise> {
               ),
             ),
             Card(
-              margin: const EdgeInsets.all(5),
+              elevation: 3,
+              margin: const EdgeInsets.all(16.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    TextField(
-                      controller: workController,
-                      decoration: const InputDecoration(hintText: 'Work'),
-                    ),
+                    customTextField('Work', workController),
+                    customTextField('Building', buildingController),
+                    customTextField('Floor', floorController),
+                    customTextField('Room', roomController),
+                    customTextField('Asset', assetController),
                     const SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
-                    TextField(
-                      controller: buildingController,
-                      decoration: const InputDecoration(hintText: 'Building'),
+                    DropdownButtonFormField(
+                      value: _selectedServiceProvider,
+                      items: serviceProviders.map((String provider) {
+                        return DropdownMenuItem(
+                          value: provider,
+                          child: Text(provider),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedServiceProvider = value.toString();
+                        });
+                      },
+                      decoration: InputDecoration(
+                          labelText: 'Service Provider',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0))),
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextField(
-                      controller: floorController,
-                      decoration: const InputDecoration(hintText: 'Floor'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextField(
-                      controller: roomController,
-                      decoration: const InputDecoration(hintText: 'Room'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextField(
-                      controller: assetController,
-                      decoration: const InputDecoration(hintText: 'Asset'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Container(
-                      height: 30,
-                      width: 130,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(5.0)),
-                      child: DropdownButtonFormField(
-                        value: _selectedServiceProvider,
-                        items: serviceProviders.map((String provider) {
-                          return DropdownMenuItem(
-                            value: provider,
-                            child: Text(provider),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedServiceProvider = value.toString();
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'Service Provider',
-                        ),
-                      ),
+                    SizedBox(
+                      height: 20,
                     ),
                     const Align(
                       alignment: Alignment.centerLeft,
@@ -133,7 +108,7 @@ class _RaiseState extends State<Raise> {
                         'Remark:-',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -143,9 +118,10 @@ class _RaiseState extends State<Raise> {
                       child: TextField(
                         controller: remarkController,
                         maxLines: null,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Remarks',
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0)),
                         ),
                       ),
                     ),
@@ -163,18 +139,18 @@ class _RaiseState extends State<Raise> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Imagepick()));
                     },
-                    child: const Text('Pick Image'),
+                    child: Text('Pick Image'),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       generateTicketID();
                       storeRaisedTicket(ticketID);
                     },
-                    child: const Text('Save'),
+                    child: Text('Save'),
                   ),
                   Text(
                     _getCurrentDate(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -184,6 +160,20 @@ class _RaiseState extends State<Raise> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget customTextField(String hint, TextEditingController controller) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.0),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+            labelText: hint,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            )),
       ),
     );
   }

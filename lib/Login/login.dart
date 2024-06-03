@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:complaint_management/Homescreen.dart';
 import 'package:complaint_management/Login/sign-up.dart';
+import 'package:complaint_management/Service%20Provider/Servicelogin.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -150,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                             context);
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       'Login',
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
@@ -164,16 +165,21 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Positioned(
               bottom: 45,
-              left: 30,
+              left: 20,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'FORGOT PASSWORD?',
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginService()));
+                      },
+                      child: const Text(
+                        'Login as Service Provider',
                       )),
-                  SizedBox(
+                  const SizedBox(
                     width: 110,
                   ),
                   TextButton(
@@ -183,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                             MaterialPageRoute(
                                 builder: (context) => SignupPage()));
                       },
-                      child: Text(
+                      child: const Text(
                         'SIGN UP',
                       ))
                 ],
@@ -214,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
         print(storedPassword);
         if (password == storedPassword) {
           storeLoginData(true, userIDController.text);
-          SnackBar snackBar = SnackBar(
+          SnackBar snackBar = const SnackBar(
               backgroundColor: Colors.green,
               content: Center(
                 child: Text('Login successful'),
@@ -225,7 +231,7 @@ class _LoginPageState extends State<LoginPage> {
               MaterialPageRoute(builder: (context) => HomeScreen()),
               (route) => false);
         } else {
-          SnackBar snackBar = SnackBar(
+          SnackBar snackBar = const SnackBar(
               backgroundColor: Colors.red,
               content: Center(
                 child: Text('Incorrect Password'),
@@ -233,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       } else {
-        SnackBar snackBar = SnackBar(
+        SnackBar snackBar = const SnackBar(
             backgroundColor: Colors.red,
             content: Center(
               child: Text('User does not exist'),

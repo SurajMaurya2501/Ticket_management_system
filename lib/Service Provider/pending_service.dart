@@ -28,36 +28,42 @@ class _service_pendingState extends State<service_pending> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('service_pending Tickets'),
-        ),
-        body: ListView.builder(
-            itemCount: ticketList.length, //* 2 - 1,
-            itemBuilder: (BuildContext context, int index) {
-              // if (index.isOdd) {
-              //   return Divider();
-              // }
-              //final itemIndex = index ~/ 3;
+      appBar: AppBar(
+        title: Text('service_pending Tickets'),
+      ),
+      body: ListView.builder(
+        itemCount: ticketList.length, //* 2 - 1,
+        itemBuilder: (BuildContext context, int index) {
+          // if (index.isOdd) {
+          //   return Divider();
+          // }
+          //final itemIndex = index ~/ 3;
 
-              return ListTile(
-                title: Text('Ticket ${ticketList[index]}'),
-                trailing: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => pendingstatus_service()));
-                    },
-                    child: const Text('Open')),
-                onTap: () {
-                  print('Tapped on Ticekt: ${tickets[index]}');
-                  Navigator.pushReplacement(
+          return ListTile(
+            title: Text('Ticket ${ticketList[index]}'),
+            trailing: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => pendingstatus_service()));
+                          builder: (context) => pendingstatus_service(
+                                Number: ticketList[index],
+                              )));
                 },
-              );
-            }));
+                child: const Text('Open')),
+            onTap: () {
+              print('Tapped on Ticekt: ${tickets[index]}');
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => pendingstatus_service(
+                            Number: ticketList[index],
+                          )));
+            },
+          );
+        },
+      ),
+    );
   }
 
   Future<void> getPendingTicket() async {

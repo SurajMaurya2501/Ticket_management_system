@@ -1,17 +1,14 @@
-import 'package:complaint_management/Login/login.dart';
 import 'package:complaint_management/Homescreen.dart';
-import 'package:complaint_management/Login/sign-up.dart';
+import 'package:complaint_management/Login/login.dart';
 import 'package:complaint_management/Pending/pendingstatus.dart';
-import 'package:complaint_management/Service%20Provider/auth/login.dart';
-import 'package:complaint_management/Service%20Provider/pending_service.dart';
+import 'package:complaint_management/Service%20Provider/Servicelogin.dart';
+import 'package:complaint_management/Service%20Provider/Servicesignup.dart';
 import 'package:complaint_management/Service%20Provider/pendingstatus_service.dart';
+import 'package:complaint_management/Service%20Provider/reports_ticket_page.dart';
 import 'package:complaint_management/Service%20Provider/service_home.dart';
 import 'package:complaint_management/report/report1.dart';
-import 'package:complaint_management/report/report2.dart';
-import 'package:complaint_management/screens/pending.dart';
 import 'package:complaint_management/screens/raise.dart';
 import 'package:complaint_management/screens/report.dart';
-import 'package:complaint_management/screens/image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -47,15 +44,29 @@ class MyApp extends StatelessWidget {
           // Report1(),
           // Imagepick(),
           //PieChartWidget(),
-          //  Pendingstatus(),
+          //     pendingstatus(
+          //   Number: '',
+          // ),
           //pending(),
-          // Raise(),
-          //Report(),
-          //const HomeScreen(),
-          LoginService(),
-      //Homeservice(),
-      // pendingstatus_service(),
-      // service_pending(),
+          //Raise(),
+          //report1(),
+          //HomeScreen(),
+          Homeservice(),
+      //     ReportTicketScreen(
+      //   asset: '',
+      //   work: '',
+      //   building: '',
+      //   floor: '',
+      //   remark: '',
+      //   room: '',
+      //   ticketNo: '',
+      // ),
+      // pendingstatus_service(
+      //   Number: '68',
+      // ),
+      //service_pending(),
+      //LoginService()
+      //serviceSignup()
       //LoginPage(),
       // SignupPage(),
     );

@@ -28,7 +28,7 @@ class _ReportState extends State<Report> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Report1()),
+                  MaterialPageRoute(builder: (context) => report1()),
                 );
               },
               icon: Icon(

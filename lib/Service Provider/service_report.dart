@@ -22,16 +22,17 @@ class _service_reportState extends State<service_report> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('service_report'),
+        title: const Text('service_report'),
         actions: [
           IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => service_report1()),
+                  MaterialPageRoute(
+                      builder: (context) => const ServiceReportScreen()),
                 );
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_forward_ios_outlined,
                 size: 35,
               ))

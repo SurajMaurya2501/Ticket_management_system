@@ -1,14 +1,15 @@
-import 'package:complaint_management/report/report2.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:complaint_management/Service%20Provider/reports_ticket_page.dart';
 import 'package:flutter/material.dart';
 
-class Report1 extends StatefulWidget {
-  const Report1({super.key});
+class report1 extends StatefulWidget {
+  const report1({super.key});
 
   @override
-  State<Report1> createState() => _Report1State();
+  State<report1> createState() => _report1State();
 }
 
-class _Report1State extends State<Report1> {
+class _report1State extends State<report1> {
   final List<String> serviceProviders = [
     'Provider A',
     'Provider B',
@@ -16,160 +17,100 @@ class _Report1State extends State<Report1> {
     'Provider D',
   ];
 
+  bool isLoading = true;
+
+  List<dynamic> allTicketsData = [];
+
   String? _selectedServiceProvider;
+
+  List<String> mapKeys = [];
+
+  @override
+  void initState() {
+    getAllTicketData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Report1'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Report2()));
-              },
-              icon: Icon(
-                Icons.arrow_forward_ios_outlined,
-                size: 35,
-              ))
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Ticket #: 12345', // Display your ticket number here
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Text(
-                  'Status - Open',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+        appBar: AppBar(
+          title: const Text(
+            "Reports",
           ),
-          Expanded(
-            child: Card(
-              margin: const EdgeInsets.all(5),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const TextField(
-                      decoration: InputDecoration(hintText: 'Work'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(hintText: 'Building'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(hintText: 'Floor'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(hintText: 'Room'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(hintText: 'Asset'),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(5.0)),
-                      child: DropdownButtonFormField(
-                        value: _selectedServiceProvider,
-                        items: serviceProviders.map((String provider) {
-                          return DropdownMenuItem(
-                            value: provider,
-                            child: Text(provider),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedServiceProvider = value.toString();
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'Service Provider',
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Remark:-',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: TextField(
-                          maxLines: null,
-                          decoration: InputDecoration(
-                            hintText: 'Remarks',
-                            border: OutlineInputBorder(),
+          centerTitle: true,
+          backgroundColor: Colors.deepPurple,
+        ),
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: allTicketsData.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReportTicketScreen(
+                                  ticketNo: mapKeys[index],
+                                  asset: allTicketsData[index]['asset'],
+                                  building: allTicketsData[index]['building'],
+                                  floor: allTicketsData[index]['floor'],
+                                  remark: allTicketsData[index]['remark'],
+                                  room: allTicketsData[index]['room'],
+                                  work: allTicketsData[index]['work'],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                              bottom: 5.0,
+                            ),
+                            child: Card(
+                              elevation: 5.0,
+                              color: Colors.white,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    alignment: Alignment.bottomLeft,
+                                    margin: const EdgeInsets.only(
+                                      left: 10.0,
+                                    ),
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 40,
+                                    child: Text(
+                                      "Ticket ${mapKeys[index]}",
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            right: 10.0, bottom: 5.0),
+                                        child: const Text("Open"),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _getCurrentDate(),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+                  )
+                ],
+              ));
   }
 
   String _getCurrentDate() {
@@ -179,5 +120,30 @@ class _Report1State extends State<Report1> {
 
   String _addLeadingZero(int number) {
     return number.toString().padLeft(2, '0');
+  }
+
+  Future getAllTicketData() async {
+    allTicketsData.clear();
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('raisedTickets').get();
+
+    List<String> tempKeys = querySnapshot.docs.map((e) => e.id).toList();
+
+    allTicketsData = querySnapshot.docs.map((e) => e.data()).toList();
+
+    QuerySnapshot resolvedTicketQuery =
+        await FirebaseFirestore.instance.collection('resolvedTicket').get();
+
+    tempKeys = tempKeys + resolvedTicketQuery.docs.map((e) => e.id).toList();
+
+    allTicketsData =
+        allTicketsData + resolvedTicketQuery.docs.map((e) => e.data()).toList();
+
+    mapKeys = tempKeys;
+
+    print(allTicketsData);
+
+    isLoading = false;
+    setState(() {});
   }
 }

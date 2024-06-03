@@ -1,3 +1,6 @@
+import 'package:complaint_management/Service%20Provider/Servicelogin.dart';
+import 'package:complaint_management/Service%20Provider/pending_service.dart';
+import 'package:complaint_management/Service%20Provider/service_report1.dart';
 import 'package:complaint_management/screens/pending.dart';
 import 'package:complaint_management/screens/raise.dart';
 import 'package:complaint_management/screens/report.dart';
@@ -20,8 +23,8 @@ class HomeserviceState extends State<Homeservice> {
 
   List<Widget Function()> screens = [
     // () => Raise(),
-    () => pending(),
-    () => Report(),
+    () => service_pending(),
+    () => const ServiceReportScreen(),
   ];
 
   @override
@@ -31,7 +34,7 @@ class HomeserviceState extends State<Homeservice> {
           centerTitle: true,
           backgroundColor: Colors.white,
           title: const Text(
-            'C.🅼.S',
+            'T.🅼.S',
             style: TextStyle(color: Colors.deepPurple, fontSize: 30),
           ),
           // leading: IconButton(
@@ -42,7 +45,10 @@ class HomeserviceState extends State<Homeservice> {
           //     )),
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginService()));
+                },
                 icon: const Icon(
                   Icons.power_settings_new,
                   color: Colors.deepPurple,

@@ -36,7 +36,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Change Password')),
+        appBar: AppBar(
+          title: const Text('Reset Password'),
+          backgroundColor: Colors.deepPurple,
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -104,6 +107,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           ),
                           const SizedBox(height: 20),
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                            ),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _changePassword(
@@ -126,20 +132,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 }
 
-class password extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/changePassword');
-            },
-            child: const Text('Changed Password')),
-      ),
-    );
-  }
-}
+// class password extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Home'),
+//       ),
+//       body: Center(
+//         child: ElevatedButton(
+//             onPressed: () {
+//               Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                       builder: (context) => ChangePasswordScreen()));
+//             },
+//             child: const Text('Changed Password')),
+//       ),
+//     );
+//   }
+// }
